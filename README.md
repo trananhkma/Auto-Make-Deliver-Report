@@ -2,7 +2,7 @@
 Just because of my laziness
 
 #### I. Environment
--- Ubuntu 14.01 <br>
+-- Ubuntu 14.04 <br>
 -- Mozilla Firefox 43.0.4
 
 #### II. Installation
