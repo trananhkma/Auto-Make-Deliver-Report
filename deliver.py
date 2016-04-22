@@ -41,12 +41,12 @@ def get_commit_url(html):
 def get_commit_urls(gerrit_url, html):
     patch_count = get_patch_count(html)
     commit_urls = {}
-    commit_urls[patch_count] = ROOT + get_commit_url(html).replace('commitdiff', 'commitdiff_plain')
+    commit_urls[patch_count] = ROOT + get_commit_url(html).replace('commitdiff', 'patch')
     while patch_count > 1:
         patch_count -= 1
         patch_url = gerrit_url + str(patch_count)
         html = get_html(patch_url)
-        commit_urls[patch_count] = ROOT + get_commit_url(html).replace('commitdiff', 'commitdiff_plain')
+        commit_urls[patch_count] = ROOT + get_commit_url(html).replace('commitdiff', 'patch')
     return commit_urls
 
 
@@ -71,6 +71,7 @@ def get_content(patch_url):
 
 def create_file(project_name, bug_name, patch_url, patch_num=1):
     filename = '%s_%s_PS%s.txt' % (project_name, bug_name, str(patch_num))
+    print 'Getting patch', patch_num
     while True:
         try:
             content = get_content(patch_url)
@@ -79,6 +80,7 @@ def create_file(project_name, bug_name, patch_url, patch_num=1):
         except TypeError:
             print 'Failed! Retrying...'
             continue
+        print 'Done.'
         break
     outfile = txt2pdf.convert(filename)
     os.remove(filename)
@@ -114,6 +116,7 @@ def main():
             except IndexError:
                 print "Get html failed! Retrying..."
                 continue
+            print 'Done.'
             break
         print 'Project:', project_name
         print 'Bug name:', bug_name
