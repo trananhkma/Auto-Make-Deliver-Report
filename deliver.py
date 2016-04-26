@@ -17,17 +17,15 @@ FIREFOX_BIN = '/usr/bin/firefox'
 
 
 def get_input(filename=INPUT):
-	with open(filename, 'r') as f:
-		return [line.strip() for line in f]
+    with open(filename, 'r') as f:
+        return [line.strip() for line in f]
 
 
 def get_html(gerrit_url):
-    binary = FirefoxBinary(FIREFOX_BIN)
-    driver = webdriver.Firefox(firefox_binary=binary)
+    driver = webdriver.Firefox(firefox_binary=FirefoxBinary(FIREFOX_BIN))
     driver.get(gerrit_url)
     sleep(5)
-    html = driver.execute_script("return document.getElementsByTagName('html')[0].innerHTML")
-    return html
+    return driver.execute_script("return document.getElementsByTagName('html')[0].innerHTML")
 
 
 def get_patch_count(html):
@@ -74,9 +72,8 @@ def create_file(project_name, bug_name, patch_url, patch_num=1):
     print 'Getting patch', patch_num
     while True:
         try:
-            content = get_content(patch_url)
             with open(filename, 'w+') as f:
-                f.write(content)
+                f.write(get_content(patch_url))
         except TypeError:
             print 'Failed! Retrying...'
             continue
