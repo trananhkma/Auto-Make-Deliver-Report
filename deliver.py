@@ -129,7 +129,7 @@ def main():
         else:
             directory = create_folder(project_name, bug_name)
             os.chdir("/".join([os.getcwd(), directory]))
-            for patch_num, patch_url in patch_urls:
+            for patch_num, patch_url in patch_urls.iteritems():
                 create_file(project_name, bug_name, patch_url, patch_num)
 
 
