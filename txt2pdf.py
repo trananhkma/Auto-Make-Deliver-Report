@@ -65,10 +65,8 @@ def pdf_create(c, data, outfile, font, fontsize, top, mleft, lpp, leading, kerni
 
 def get_outfile(infile):
     if '.' in infile:
-        outfile = infile[:infile.rfind('.')] + '.pdf'
-    else:
-        outfile = infile + '.pdf'
-    return outfile
+        return infile[:infile.rfind('.')] + '.pdf'
+    return infile + '.pdf'
 
 
 def convert(infile):
@@ -84,11 +82,8 @@ def convert(infile):
     nChars = int((width + KERNING) / (w + KERNING))
     top = PAGE_SIZE[1] - TOP - FONT_SIZE
 
-    if LEADING:
-        nLines = int((LEADING + PAGE_SIZE[1] - TOP - BOTTOM - FONT_SIZE) / (LEADING))
-    else:
-        nLines = int((1.2*FONT_SIZE + PAGE_SIZE[1] - TOP - BOTTOM - FONT_SIZE) / (1.2*FONT_SIZE))
-
+    LEADING = LEADING or 1.2*FONT_SIZE 
+    nLines = int((LEADING + PAGE_SIZE[1] - TOP - BOTTOM - FONT_SIZE) / (LEADING))
 
     data = readfile(infile, nChars)
     pdf_create(c, data, outfile, FONT, FONT_SIZE, top, LEFT, nLines, LEADING, KERNING)
