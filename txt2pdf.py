@@ -82,9 +82,9 @@ def convert(infile):
     nChars = int((width + KERNING) / (w + KERNING))
     top = PAGE_SIZE[1] - TOP - FONT_SIZE
 
-    LEADING = LEADING or 1.2*FONT_SIZE 
-    nLines = int((LEADING + PAGE_SIZE[1] - TOP - BOTTOM - FONT_SIZE) / (LEADING))
+    leading = LEADING or 1.2*FONT_SIZE
+    nLines = int((leading + PAGE_SIZE[1] - TOP - BOTTOM - FONT_SIZE) / (leading))
 
     data = readfile(infile, nChars)
-    pdf_create(c, data, outfile, FONT, FONT_SIZE, top, LEFT, nLines, LEADING, KERNING)
+    pdf_create(c, data, outfile, FONT, FONT_SIZE, top, LEFT, nLines, leading, KERNING)
     return outfile
