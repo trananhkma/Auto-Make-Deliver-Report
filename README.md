@@ -24,7 +24,7 @@ Install reportlab - A Python lib allow to work with PDF file.
 Make sure your gerrit links matched with this format:
   `https://review.openstack.org/#/c/xxxxx/`
 
-2. Edit <b>FIREFOX_BIN</b> in <b>deliver.py</b> file to your firefox dir. <br>
+2. Replace <b>FIREFOX_BIN</b> in <b>deliver.py</b> file by your firefox dir. <br>
 Show this dir with
 
   `$ which firefox`
