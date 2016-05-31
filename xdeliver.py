@@ -28,6 +28,8 @@ GERRIT_PORT = 29418
 START_TIME = (date.today() - timedelta(days=7)).isoformat()
 OUTPUT = 'Deliver'
 
+LOC_FILE = "/".join([os.getcwd(), 'loc.txt'])
+LF = open(LOC_FILE, 'w+')
 
 def check_date(value):
     try:
@@ -42,7 +44,7 @@ def get_content(patch_url):
         return r.content
 
 
-def create_file(project_name, bug_name, patch_url, patch_num=1):
+def create_file(project_name, bug_name, patch_url, lins, ldel, patch_num=1):
     filename = '%s_%s_PS%s.txt' % (project_name, bug_name, patch_num)
     LOG.info('|_______ Getting patch: %s', patch_num)
     while True:
@@ -55,7 +57,8 @@ def create_file(project_name, bug_name, patch_url, patch_num=1):
         break
     outfile = txt2pdf.convert(filename)
     os.remove(filename)
-    LOG.info('|_______ Finish creating: %s', outfile)
+    LF.write(outfile + ' ' + str(lins) + ' ' + str(ldel) + '\n')
+    LOG.info('\_______ Finish creating: %s', outfile)
 
 
 def create_folder(project_name, topic):
@@ -164,12 +167,18 @@ def main():
             os.chdir("/".join([os.getcwd(), directory]))
             topic = topic[1]
         if len(patch_urls) == 1:
-            create_file(project_name, topic, patch_urls[1])
+            create_file(project_name, topic,  patch_urls[1],
+                        p.patchsets[1].raw['sizeInsertions'],
+                        p.patchsets[1].raw['sizeDeletions'])
         else:
             directory = create_folder(project_name, topic)
             os.chdir("/".join([os.getcwd(), directory]))
             for patch_num, patch_url in patch_urls.iteritems():
-                create_file(project_name, topic, patch_url, patch_num)
+                create_file(project_name, topic, patch_url,
+                            p.patchsets[patch_num].raw['sizeInsertions'],
+                            p.patchsets[patch_num].raw['sizeDeletions'],
+                            patch_num)
+    LF.close()
     LOG.info("|_ FIN!")
 
 

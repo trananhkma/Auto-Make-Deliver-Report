@@ -1,4 +1,5 @@
 paramiko>=1.13
 semantic-version
 requests
+pyPdf
 
