@@ -52,15 +52,33 @@ def get_project_name(html):
 
 
 def get_bug_name(html):
+    change = html.split('Change <a')[1].split('</a>')[0].split('">')[-1]
     if 'Closes-Bug: #' in html:
         return 'bug_%s' % html.split('Closes-Bug: #')[1].split('</a>')[0]
+    elif 'Closes-bug: #' in html:
+        return 'bug_%s' % html.split('Closes-bug: #')[1].split('</a>')[0]
     elif 'Partial-Bug: #' in html:
         return (
             'bug_%s' % html.split('Partial-Bug: #')[1].split('</a>')[0],
-            'patch_%s' % html.split('Change <a')[1].split('</a>')[0].split('">')[-1]
+            'patch_%s' % change
+        )
+    elif 'Partial-bug: #' in html:
+        return (
+            'bug_%s' % html.split('Partial-bug: #')[1].split('</a>')[0],
+            'patch_%s' % change
+        )
+    elif 'blueprint ' in html:
+        return (
+            'bp_%s' % html.split('blueprint ')[-1].split('</a>')[0],
+            'patch_%s' % change
+        )
+    elif 'bp:' in html:
+        return (
+            'bp_%s' % html.split('bp:')[-1].split('</a>')[0],
+            'patch_%s' % change
         )
     else:
-        return 'patch_%s' % html.split('Change <a')[1].split('</a>')[0].split('">')[-1]
+        return 'patch_%s' % change
 
 
 def get_content(patch_url):
