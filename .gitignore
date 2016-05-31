@@ -1,2 +1,4 @@
 *.pyc
 Deliver/
+input.txt
+.idea/
