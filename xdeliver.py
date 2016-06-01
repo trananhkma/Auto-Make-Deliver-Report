@@ -126,7 +126,7 @@ def main():
                       metavar="FILE", default=None)
     parser.add_option("-u", "--user", dest="user", action='store',
                       help="gerrit user to querry [default: %default]",
-                      metavar="FILE", default=OWNER)
+                      metavar="USER", default=OWNER)
     (options, args) = parser.parse_args()
     check_date(options.start_time)
     owner = options.owner
