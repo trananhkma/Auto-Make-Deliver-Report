@@ -124,6 +124,9 @@ def main():
     parser.add_option("-k", "--keyfile", dest="keyfile", action='store',
                       help="gerrit ssh keyfile [default: use local keyfile]",
                       metavar="FILE", default=None)
+    parser.add_option("-u", "--user", dest="user", action='store',
+                      help="gerrit user to querry [default: %default]",
+                      metavar="FILE", default=OWNER)
     (options, args) = parser.parse_args()
     check_date(options.start_time)
     owner = options.owner
@@ -131,10 +134,11 @@ def main():
     port = options.port
     server = options.server
     keyfile = options.keyfile
+    user = options.user
 
     rsite = gssh.Site(server, owner, port, keyfile).connect()
     plist = gssh.Query('--commit-message',
-                       'owner:' + owner +
+                       'owner:' + user +
                        ' AND (status:merged OR status:pending)' +
                        ' since:' + start_time).execute_on(rsite)
     LOG.info("| Total gerrit results: %d", len(plist))
