@@ -13,6 +13,8 @@ from sys import argv
 
 from pyPdf import PdfFileReader
 
+import optparse
+
 # Delimiter
 PAGE_DECO = 91
 LOC_DECO = 114
@@ -106,37 +108,36 @@ def tree(dir, padding, print_files=False, isLast=False, isFirst=False,
                           recur_deli(PAGE_DECO - l + 1) + get_page_num(path)
 
 
-def usage():
-    return '''Usage: %s [-f] 
-Print tree structure of path specified.
-Options:
-PATH    Path to process''' % basename(argv[0])
-
-
 def main():
     global TOTAL_LOC_INSERTION
     global TOTAL_LOC_DELETIONS
-    if len(argv) == 1:
-        print usage()
-    else:
-        # print directories and files
-        path = argv[1]
-        locr = get_loc()
-        locs = {}
-        if isdir(path):
-            for line in locr:
-                loc = line.split('|')
-                locs[loc[0]] = (loc[1], loc[2], loc[3])
-                TOTAL_LOC_INSERTION += int(loc[1])
-                TOTAL_LOC_DELETIONS += int(loc[2])
-            tree(path, '', True, False, True, locs)
-        else:
-            print 'ERROR: \'' + path + '\' is not a directory'
-        print '\n' + PC_STR + recur_deli(PAGE_DECO - len(PC_STR) + 1) +\
+
+    parser = optparse.OptionParser(usage="usage: %prog [options]",
+                                   version="%prog 1.0")
+
+    parser.add_option("-p", "--path", dest="path", action='store',
+                      help="delivery folder path [default: %default]",
+                      metavar="PATH", default='~/Deliver')
+
+    (options, args) = parser.parse_args()
+    path = options.path
+
+    locr = get_loc()
+    locs = {}
+    if isdir(path):
+        for line in locr:
+            loc = line.split('|')
+            locs[loc[0]] = (loc[1], loc[2], loc[3])
+            TOTAL_LOC_INSERTION += int(loc[1])
+            TOTAL_LOC_DELETIONS += int(loc[2])
+        tree(path, '', True, False, True, locs)
+        print '\n' + PC_STR + recur_deli(PAGE_DECO - len(PC_STR) + 1) + \
               str(TOTAL_PAGE_COUNT) + ' pages'
         print LOC_STR + recur_deli(LOC_DECO - len(LOC_STR) + 1) + \
               str(TOTAL_LOC_INSERTION) + ' insertion(+), ' + \
               str(abs(TOTAL_LOC_DELETIONS)) + ' deletions(-)'
+    else:
+        print 'ERROR: \'' + path + '\' is not a directory'
 
 
 if __name__ == '__main__':
