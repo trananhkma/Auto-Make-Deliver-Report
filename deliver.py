@@ -25,7 +25,9 @@ def get_html(gerrit_url):
     driver = webdriver.Firefox(firefox_binary=FirefoxBinary(FIREFOX_BIN))
     driver.get(gerrit_url)
     sleep(5)
-    return driver.execute_script("return document.getElementsByTagName('html')[0].innerHTML")
+    html = driver.execute_script("return document.getElementsByTagName('html')[0].innerHTML")
+    driver.close()
+    return html
 
 
 def get_patch_count(html):
