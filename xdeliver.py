@@ -29,7 +29,7 @@ START_TIME = (date.today() - timedelta(days=7)).isoformat()
 OUTPUT = 'Deliver'
 
 LOC_FILE = "/".join([os.getcwd(), 'loc.txt'])
-LF = open(LOC_FILE, 'w+')
+LF = open(LOC_FILE, 'a')
 
 
 def check_date(value):
