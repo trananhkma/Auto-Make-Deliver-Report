@@ -58,8 +58,8 @@ def create_file(project_name, bug_name, patch_url, pinfo, patch_num=1):
         break
     outfile = txt2pdf.convert(filename)
     os.remove(filename)
-    LF.write(outfile + '|' + str(pinfo[0]) + '|' + str(pinfo[1]) + '|' +
-             str(pinfo[2]) + '\n')
+    LF.write((outfile + '|' + str(pinfo[0]) + '|' + str(pinfo[1]) + '|' +
+             pinfo[2] + '\n').encode('utf-8'))
     LOG.info('\_______ Finish creating: %s', outfile)
 
 

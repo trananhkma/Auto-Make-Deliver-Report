@@ -9,7 +9,6 @@
 
 from os import listdir, sep
 from os.path import abspath, basename, isdir
-from sys import argv
 
 from pyPdf import PdfFileReader
 
