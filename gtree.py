@@ -51,15 +51,21 @@ def get_page_num(file):
 
 def tree(dir, padding, print_files=False, isLast=False, isFirst=False,
          locs=None):
+    global TOTAL_LOC_INSERTION
+    global TOTAL_LOC_DELETIONS
+
     if isFirst:
-        print padding.decode('utf8')[:-1].encode('utf8') + dir
+        print padding.decode('utf8')[:-1].encode('utf8') + dir + '\n|'
     else:
         if isLast:
-            print padding.decode('utf8')[:-1].encode('utf8') + '\___' + \
+            print padding.decode('utf8')[:-1].encode('utf8') + '\---' + \
                   basename(abspath(dir))
         else:
             print padding.decode('utf8')[:-1].encode('utf8') + '+---' + \
                   basename(abspath(dir))
+        if dir.split('/')[-1] in locs:
+            print padding + recur_deli(9, 1) + '- ' + \
+                  locs[dir.split('/')[-1]][0]
     if print_files:
         files = listdir(dir)
     else:
@@ -85,23 +91,33 @@ def tree(dir, padding, print_files=False, isLast=False, isFirst=False,
             if isLast:
                 l = len(padding) + len(file) + 5
                 if file in locs:
-                    print padding + '\___' + file + ' ' + \
+                    TOTAL_LOC_INSERTION += int(locs[file][0])
+                    TOTAL_LOC_DELETIONS += int(locs[file][1])
+                    print padding + '\---' + file + ' ' + \
                           recur_deli(LOC_DECO-l+1) + locs[file][0] + \
                           ' insertions(+), ' + locs[file][1].replace('-','') +\
                           ' deletions(-)'
-                    print padding + recur_deli(10, 1) + '- ' + locs[file][2]
+                    if len(locs[file]) == 3:
+                        print padding + recur_deli(10, 1) + '- ' + \
+                              locs[file][2]
+                    print padding
                 else:
-                    print padding + '\___' + file + ' ' + \
+                    print padding + '\---' + file + ' ' + \
                           recur_deli(PAGE_DECO - l + 1) + get_page_num(path)
+                    print padding
             else:
                 l = len(padding) + len(file) + 5
                 if file in locs:
+                    TOTAL_LOC_INSERTION += int(locs[file][0])
+                    TOTAL_LOC_DELETIONS += int(locs[file][1])
                     print padding + '|---' + file + ' ' + \
                           recur_deli(LOC_DECO-l+1) + locs[file][0] + \
                           ' insertions(+), ' + locs[file][1].replace('-','') +\
                           ' deletions(-)'
-                    print padding + '|' + recur_deli(9, 1) + \
-                          '- ' + locs[file][2]
+                    if len(locs[file]) == 3:
+                        print padding + '|' + recur_deli(9, 1) + \
+                              '- ' + locs[file][2]
+                        print padding + '|'
                 else:
                     print padding + '|---' + file + ' ' + \
                           recur_deli(PAGE_DECO - l + 1) + get_page_num(path)
@@ -124,13 +140,20 @@ def main():
     locr = get_loc()
     locs = {}
     if isdir(path):
+        print "                                                         " \
+              "                         [Page count (for documents)]    " \
+              "   [Line count (for source code)]"
+        print "\nFolder PATH listing"
         for line in locr:
             loc = line.split('|')
-            locs[loc[0]] = (loc[1], loc[2], loc[3])
-            TOTAL_LOC_INSERTION += int(loc[1])
-            TOTAL_LOC_DELETIONS += int(loc[2])
+            if len(loc) == 2:
+                locs[loc[0]] = (loc[1],)
+            elif len(loc) == 4:
+                locs[loc[0]] = (loc[1], loc[2], loc[3])
+            else:
+                locs[loc[0]] = (loc[1], loc[2])
         tree(path, '', True, False, True, locs)
-        print '\n' + PC_STR + recur_deli(PAGE_DECO - len(PC_STR) + 1) + \
+        print PC_STR + recur_deli(PAGE_DECO - len(PC_STR) + 1) + \
               str(TOTAL_PAGE_COUNT) + ' pages'
         print LOC_STR + recur_deli(LOC_DECO - len(LOC_STR) + 1) + \
               str(TOTAL_LOC_INSERTION) + ' insertion(+), ' + \

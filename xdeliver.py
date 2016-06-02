@@ -9,6 +9,7 @@ import logging
 import optparse
 import os
 import requests
+import shutil
 import sys
 import txt2pdf
 
@@ -29,6 +30,8 @@ START_TIME = (date.today() - timedelta(days=7)).isoformat()
 OUTPUT = 'Deliver'
 
 LOC_FILE = "/".join([os.getcwd(), 'loc.txt'])
+if os.path.exists(LOC_FILE):
+    os.remove(LOC_FILE)
 LF = open(LOC_FILE, 'a')
 
 
@@ -45,7 +48,7 @@ def get_content(patch_url):
         return r.content
 
 
-def create_file(project_name, bug_name, patch_url, pinfo, patch_num=1):
+def create_file(project_name, bug_name, patch_url, pinfo=None, patch_num=1):
     filename = '%s_%s_PS%s.txt' % (project_name, bug_name, patch_num)
     LOG.info('|_______ Getting patch: %s', patch_num)
     while True:
@@ -58,19 +61,27 @@ def create_file(project_name, bug_name, patch_url, pinfo, patch_num=1):
         break
     outfile = txt2pdf.convert(filename)
     os.remove(filename)
-    LF.write((outfile + '|' + str(pinfo[0]) + '|' + str(pinfo[1]) + '|' +
-             pinfo[2] + '\n').encode('utf-8'))
+    if len(pinfo) == 3:
+        LF.write((outfile + '|' + str(pinfo[0]) + '|' + str(
+            pinfo[1]) + '|' + pinfo[2] + '\n').encode('utf-8'))
+    else:
+        LF.write((outfile + '|' + str(pinfo[0]) + '|' + str(
+            pinfo[1]) + '\n').encode('utf-8'))
     LOG.info('\_______ Finish creating: %s', outfile)
 
 
-def create_folder(project_name, topic):
+def create_folder(project_name, topic, msg=None):
     folder_name = '%s_%s' % (project_name, topic)
     directory = "%s/Patches" % folder_name
     if not os.path.exists(directory):
         LOG.info('|_______ Create folder: %s', folder_name)
         os.makedirs(directory)
+        if msg is not None:
+            LF.write(folder_name + '|' + msg + '\n')
     else:
         LOG.info('|_______ Folder %s existed!', folder_name)
+        if msg is not None:
+            LF.write((folder_name + '|' + msg + '\n').encode('utf-8'))
     return directory
 
 
@@ -78,9 +89,11 @@ def get_topic_name(ps):
     msg = ps.raw['commitMessage']
     change = ps.number
     if 'Closes-Bug: #' in msg:
-        return 'bug_%s' % msg.split('Closes-Bug: #')[1].rstrip()
+        return 'bug_%s_patch_%s' % (msg.split('Closes-Bug: #')[1].rstrip(),
+                                    change)
     elif 'Closes-bug: #' in msg:
-        return 'bug_%s' % msg.split('Closes-bug: #')[1].rstrip()
+        return 'bug_%s_patch_%s' % (msg.split('Closes-bug: #')[1].rstrip(),
+                                    change)
     elif 'Partial-Bug: #' in msg:
         return (
             'bug_%s' % msg.split('Partial-Bug: #')[1].rstrip(),
@@ -127,6 +140,10 @@ def main():
     parser.add_option("-u", "--user", dest="user", action='store',
                       help="gerrit user to querry [default: %default]",
                       metavar="USER", default=OWNER)
+    parser.add_option("-d", "--del", dest="bdel", action='store',
+                      type="int", help="whether to delete delivery folder "
+                                       "and loc file [default: %default]",
+                      metavar="PORT", default=0)
     (options, args) = parser.parse_args()
     check_date(options.start_time)
     owner = options.owner
@@ -135,6 +152,7 @@ def main():
     server = options.server
     keyfile = options.keyfile
     user = options.user
+    bdel = options.bdel
 
     rsite = gssh.Site(server, owner, port, keyfile).connect()
     plist = gssh.Query('--commit-message',
@@ -142,6 +160,9 @@ def main():
                        ' AND (status:merged OR status:pending)' +
                        ' since:' + start_time).execute_on(rsite)
     LOG.info("| Total gerrit results: %d", len(plist))
+
+    if bdel == 1:
+        shutil.rmtree(OUTPUT, True)
 
     # Create delivery folder
     if not os.path.exists(OUTPUT):
@@ -179,15 +200,15 @@ def main():
                         p.raw['commitMessage'].
                         split('Change-Id')[0].replace('\n', ' ')))
         else:
-            directory = create_folder(project_name, topic)
+            directory = create_folder(project_name, topic,
+                                      p.raw['commitMessage'].
+                                split('Change-Id')[0].replace('\n', ' '))
             os.chdir("/".join([os.getcwd(), directory]))
             for patch_num, patch_url in patch_urls.iteritems():
                 create_file(project_name, topic, patch_url, (
                             p.patchsets[patch_num].raw['sizeInsertions'],
-                            p.patchsets[patch_num].raw['sizeDeletions'],
-                            p.raw['commitMessage'].
-                            split('Change-Id')[0].replace('\n', ' ')),
-                            patch_num)
+                            p.patchsets[patch_num].raw['sizeDeletions']),
+                            patch_num=patch_num)
     LF.close()
     LOG.info("|_ FIN!")
 

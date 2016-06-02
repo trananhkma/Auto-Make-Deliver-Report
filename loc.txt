@@ -1,0 +1,180 @@
+[nova]_patch_317832_PS1.pdf|5|-8|Config options: move set default opt of db section to centralized place  Currently markus_z have centralized database section in nova/conf/database.py. But in nova/config.py, there is a part of database section that set the default options of oslo_db. The set_default_opt include register_opt and should be moved to centralized place.  
+[nova]_patch_316550|Config options: improve libvirt help text (2)  This commit adds additional help text to the following subbet of options: live_migration* and snapshot_image_format.  
+[nova]_patch_316550_PS1.pdf|196|-54
+[nova]_patch_316550_PS2.pdf|196|-54
+[nova]_patch_316550_PS3.pdf|197|-54
+[nova]_patch_316539|Config options: improve libvirt help text (1)  This commit adds additional help text to the following subbet of options: use_usb_table, inject_password, inject_key, inject_partition, virt_type, connection_uri, disk_prefix, cpu_mode, cpu_model, rescue_image_id, rescue_kernel_id, rescue_ramdisk_id.  
+[nova]_patch_316539_PS1.pdf|279|-26
+[nova]_patch_316539_PS2.pdf|279|-26
+[nova]_patch_318517_PS1.pdf|0|-1|Config options: remove import_opts from cloudpipe section  This patch aim to eliminate import_opts from cloudpipe completed sections, missed after api section got merged.  
+[nova]_patch_321467_PS1.pdf|21|-12|Remove mox from unit/virt/libvirt/volume/*.py  unit/virt/libvirt/volume/test_volume.py unit/virt/libvirt/volume/test_nfs.py unit/virt/libvirt/volume/test_glusterfs.py  Replaced self.stubs.Set() with mock.patch.object  Partially implements: blueprint remove-mox-newton 
+[nova]_patch_315341|Config options: centralize cache options  The config options of the "nova.conf" section "cache" got moved to the new central location "nova/conf/cache.py".  
+[nova]_patch_315341_PS1.pdf|37|-96
+[nova]_patch_315341_PS2.pdf|37|-98
+[nova]_patch_315341_PS3.pdf|37|-98
+[nova]_patch_315341_PS4.pdf|30|-5
+[nova]_patch_315341_PS5.pdf|30|-5
+[nova]_patch_315443|Config options: remove import_opts from completed section  The config options of the "nova.conf" sections got moved to the new central location "nova/conf/". Otherwise, some modules are still using import_opts method from these sections, instead of CONF.<option>. This patch aim to eliminate all import_opts from below completed sections: - floating_ips - cloudpipe - compute - key_manager - network  
+[nova]_patch_315443_PS1.pdf|0|-10
+[nova]_patch_315443_PS2.pdf|0|-8
+[nova]_patch_315443_PS3.pdf|10|-30
+[nova]_patch_315463|Remove deprecated "memcached_server" in Default section  The 'memcached_server' option in DEFAULT section which was deprecated in Mitaka has been completely removed in Newton. This has been replaced by options from oslo cache section.  
+[nova]_patch_315463_PS1.pdf|12|-93
+[nova]_patch_315463_PS2.pdf|12|-93
+[nova]_patch_309360|Config options: centralize smbfs libvirt options (16)  The config options of the "nova.conf" section "libvirt" got moved to the new central location "nova/conf/libvirt.py". Subsequent patches will then move another options in libvirt section. This is the 16th patch in a long-chain patchs.  
+[nova]_patch_309360_PS1.pdf|13|-18
+[nova]_patch_309360_PS2.pdf|13|-18
+[nova]_patch_309360_PS3.pdf|13|-18
+[nova]_patch_309360_PS4.pdf|13|-18
+[nova]_patch_309360_PS5.pdf|13|-18
+[nova]_patch_309360_PS6.pdf|13|-18
+[nova]_patch_309360_PS7.pdf|13|-18
+[nova]_patch_309360_PS8.pdf|13|-18
+[nova]_patch_309363|Config options: centralize remotefs libvirt options (end)  The config options of the "nova.conf" section "libvirt" got moved to the new central location "nova/conf/libvirt.py". This is the last patch in a long-chain patchs.  The next chain of patch-set will focus on improve libvirt help texts.  
+[nova]_patch_309363_PS1.pdf|11|-16
+[nova]_patch_309363_PS2.pdf|11|-16
+[nova]_patch_309363_PS3.pdf|12|-20
+[nova]_patch_309363_PS4.pdf|12|-20
+[nova]_patch_309363_PS5.pdf|12|-20
+[nova]_patch_309363_PS6.pdf|12|-20
+[nova]_patch_309363_PS7.pdf|12|-42
+[nova]_patch_309363_PS8.pdf|12|-42
+[nova]_patch_309357|Config options: centralize scality libvirt options (15)  The config options of the "nova.conf" section "libvirt" got moved to the new central location "nova/conf/libvirt.py". Subsequent patches will then move another options in libvirt section. This is the 15th patch in a long-chain patchs.  
+[nova]_patch_309357_PS1.pdf|11|-13
+[nova]_patch_309357_PS2.pdf|11|-13
+[nova]_patch_309357_PS3.pdf|11|-13
+[nova]_patch_309357_PS4.pdf|11|-13
+[nova]_patch_309357_PS5.pdf|11|-13
+[nova]_patch_309357_PS6.pdf|11|-13
+[nova]_patch_309353|Config options: centralize quobyte libvirt options (14)  The config options of the "nova.conf" section "libvirt" got moved to the new central location "nova/conf/libvirt.py". Subsequent patches will then move another options in libvirt section. This is the 14th patch in a long-chain patchs.  
+[nova]_patch_309353_PS1.pdf|10|-14
+[nova]_patch_309353_PS2.pdf|10|-14
+[nova]_patch_309353_PS3.pdf|10|-14
+[nova]_patch_309353_PS4.pdf|10|-14
+[nova]_patch_309353_PS5.pdf|10|-14
+[nova]_patch_309349|Config options: centralize volume nfs libvirt options (13)  The config options of the "nova.conf" section "libvirt" got moved to the new central location "nova/conf/libvirt.py". Subsequent patches will then move another options in libvirt section. This is the 13th patch in a long-chain patchs.  
+[nova]_patch_309349_PS1.pdf|11|-15
+[nova]_patch_309349_PS2.pdf|11|-15
+[nova]_patch_309349_PS3.pdf|11|-15
+[nova]_patch_309349_PS4.pdf|11|-15
+[nova]_patch_309349_PS5.pdf|11|-15
+[nova]_patch_309342|Config options: centralize volume net libvirt options (12)  The config options of the "nova.conf" section "libvirt" got moved to the new central location "nova/conf/libvirt.py". Subsequent patches will then move another options in libvirt section. This is the 12th patch in a long-chain patchs.  
+[nova]_patch_309342_PS1.pdf|13|-21
+[nova]_patch_309342_PS2.pdf|13|-21
+[nova]_patch_309342_PS3.pdf|13|-21
+[nova]_patch_309342_PS4.pdf|13|-21
+[nova]_patch_309342_PS5.pdf|13|-21
+[python-openstackclient]_bug_1447704_patch_313979_PS1.pdf|3|-3|Ignore domain related config when using with keystone v2  Currently, "/usr/bin/openstack --insecure token issue" fails when OS_AUTH_URL and OS_IDENTITY_API_VERSION indicate keystone v2 if OS_PROJECT_DOMAIN_NAME or OS_USER_DOMAIN_NAME are set. This patchset ignore domain related configs if using with keystone v2 and print warning for each ignored config.  
+[nova]_patch_304001|Config options: completing centralize neutron options  Move remaining config options of nova.conf section "neutron" to a centralized location nova/conf/neutron.py.  Remove namespace nova.network.neutronv2 in Oslo generator config.  
+[nova]_patch_304001_PS1.pdf|36|-40
+[nova]_patch_304001_PS2.pdf|36|-40
+[nova]_patch_304001_PS3.pdf|36|-40
+[nova]_patch_304001_PS4.pdf|36|-40
+[nova]_patch_304001_PS5.pdf|41|-40
+[nova]_patch_309329|Config options: centralize iser libvirt options (11)  The config options of the "nova.conf" section "libvirt" got moved to the new central location "nova/conf/libvirt.py". Subsequent patches will then move another options in libvirt section. This is the 11th patch in a long-chain patchs.  
+[nova]_patch_309329_PS1.pdf|12|-13
+[nova]_patch_309329_PS2.pdf|12|-13
+[nova]_patch_309329_PS3.pdf|12|-13
+[nova]_patch_309329_PS4.pdf|12|-13
+[nova]_patch_309329_PS5.pdf|12|-13
+[python-openstackclient]_bug_1447704_patch_301014|Ignore domain related config when using with keystone v2  Currently, "/usr/bin/openstack --insecure token issue" fails when OS_AUTH_URL and OS_IDENTITY_API_VERSION indicate keystone v2 if OS_PROJECT_DOMAIN_NAME or OS_USER_DOMAIN_NAME are set. This patchset ignore domain related configs if using with keystone v2.  
+[python-openstackclient]_bug_1447704_patch_301014_PS1.pdf|11|0
+[python-openstackclient]_bug_1447704_patch_301014_PS2.pdf|11|0
+[python-openstackclient]_bug_1447704_patch_301014_PS3.pdf|11|0
+[python-openstackclient]_bug_1447704_patch_301014_PS4.pdf|10|0
+[python-openstackclient]_bug_1447704_patch_301014_PS5.pdf|12|0
+[python-openstackclient]_bug_1447704_patch_301014_PS6.pdf|12|0
+[python-openstackclient]_bug_1447704_patch_301014_PS7.pdf|12|0
+[python-openstackclient]_bug_1447704_patch_301014_PS8.pdf|12|0
+[nova]_patch_309315|Config options: centralize iscsi libvirt options (10)  The config options of the "nova.conf" section "libvirt" got moved to the new central location "nova/conf/libvirt.py". Subsequent patches will then move another options in libvirt section. This is the 10th patch in a long-chain patchs.  
+[nova]_patch_309315_PS1.pdf|33|-46
+[nova]_patch_309315_PS2.pdf|33|-46
+[nova]_patch_309315_PS3.pdf|33|-46
+[nova]_patch_309315_PS4.pdf|33|-46
+[nova]_patch_309315_PS5.pdf|33|-46
+[nova]_patch_309307|Config options: centralize glusterfs libvirt options (9)  The config options of the "nova.conf" section "libvirt" got moved to the new central location "nova/conf/libvirt.py". Subsequent patches will then move another options in libvirt section. This is the 9th patch in a long-chain patchs.  
+[nova]_patch_309307_PS1.pdf|10|-13
+[nova]_patch_309307_PS2.pdf|10|-13
+[nova]_patch_309307_PS3.pdf|10|-13
+[nova]_patch_309307_PS4.pdf|10|-13
+[nova]_patch_309307_PS5.pdf|10|-13
+[nova]_patch_309300|Config options: centralize aoe vol libvirt options (8)  The config options of the "nova.conf" section "libvirt" got moved to the new central location "nova/conf/libvirt.py". Subsequent patches will then move another options in libvirt section. This is the 8th patch in a long-chain patchs.  
+[nova]_patch_309300_PS1.pdf|9|-11
+[nova]_patch_309300_PS2.pdf|9|-11
+[nova]_patch_309300_PS3.pdf|9|-11
+[nova]_patch_309300_PS4.pdf|9|-11
+[nova]_patch_309296|Config options: centralize volume libvirt options (7)  The config options of the "nova.conf" section "libvirt" got moved to the new central location "nova/conf/libvirt.py". Subsequent patches will then move another options in libvirt section. This is the 7th patch in a long-chain patchs.  
+[nova]_patch_309296_PS1.pdf|10|-15
+[nova]_patch_309296_PS2.pdf|10|-15
+[nova]_patch_309296_PS3.pdf|10|-15
+[nova]_patch_309296_PS4.pdf|10|-15
+[nova]_patch_309287|Config options: centralize vif libvirt options (6)  The config options of the "nova.conf" section "libvirt" got moved to the new central location "nova/conf/libvirt.py". Subsequent patches will then move another options in libvirt section. This is the 6th patch in a long-chain patchs.  
+[nova]_patch_309287_PS1.pdf|10|-12
+[nova]_patch_309287_PS2.pdf|8|-11
+[nova]_patch_309287_PS3.pdf|8|-11
+[nova]_patch_309287_PS4.pdf|8|-11
+[nova]_patch_309274|Config options: centralize utils libvirt options (5)  The config options of the "nova.conf" section "libvirt" got moved to the new central location "nova/conf/libvirt.py". Subsequent patches will then move another options in libvirt section. This is the 5th patch in a long-chain patchs.  
+[nova]_patch_309274_PS1.pdf|8|-11
+[nova]_patch_309274_PS2.pdf|8|-11
+[nova]_patch_309274_PS3.pdf|8|-11
+[nova]_patch_309274_PS4.pdf|8|-11
+[nova]_patch_309274_PS5.pdf|8|-11
+[nova]_patch_309271|Config options: centralize lvm libvirt options (4)  The config options of the "nova.conf" section "libvirt" got moved to the new central location "nova/conf/libvirt.py". Subsequent patches will then move another options in libvirt section. This is the 4th patch in a long-chain patchs.  
+[nova]_patch_309271_PS1.pdf|11|-15
+[nova]_patch_309271_PS2.pdf|11|-15
+[nova]_patch_309271_PS3.pdf|11|-15
+[nova]_patch_309271_PS4.pdf|11|-15
+[nova]_patch_309255|Config options: centralize imagecache libvirt options (3)  The config options of the "nova.conf" section "libvirt" got moved to the new central location "nova/conf/libvirt.py". Subsequent patches will then move another options in libvirt section. This is the third patch in a long-chain patchs.  
+[nova]_patch_309255_PS1.pdf|27|-30
+[nova]_patch_309255_PS2.pdf|27|-30
+[nova]_patch_309255_PS3.pdf|27|-30
+[nova]_patch_309255_PS4.pdf|27|-30
+[nova]_patch_309246|Config options: centralize imagebackend libvirt options (2)  The config options of the "nova.conf" section "libvirt" got moved to the new central location "nova/conf/libvirt.py". Subsequent patches will then move another options in libvirt section. This is the second patch in a long-chain patchs.  
+[nova]_patch_309246_PS1.pdf|27|-36
+[nova]_patch_309246_PS2.pdf|35|-38
+[nova]_patch_309246_PS3.pdf|35|-38
+[nova]_patch_309246_PS4.pdf|35|-38
+[nova]_patch_309246_PS5.pdf|35|-38
+[nova]_patch_309239|Config options: centralize driver libvirt options (1)  The config options of the "nova.conf" section "libvirt" got moved to the new central location "nova/conf/libvirt.py". Subsequent patches will then another options in libvirt section. This is the first patch in a long-chain patchs.  
+[nova]_patch_309239_PS1.pdf|237|-206
+[nova]_patch_309239_PS2.pdf|231|-206
+[nova]_patch_309239_PS3.pdf|231|-206
+[nova]_patch_309239_PS4.pdf|238|-206
+[nova]_patch_309239_PS5.pdf|237|-206
+[nova]_patch_309239_PS6.pdf|237|-206
+[nova]_patch_306267|Config options: centralize section "ssl"  The config options of the "nova.conf" section "ssl" now moved to the new central location "nova/conf/ssl.py". Ssl options mainly locate at oslo.service sslutils.  Implements: blueprint centralize-config-options-newton 
+[nova]_patch_306267_PS1.pdf|26|-5
+[nova]_patch_306267_PS2.pdf|26|-5
+[nova]_patch_306267_PS3.pdf|30|-4
+[nova]_patch_306267_PS4.pdf|26|-5
+[nova]_patch_306267_PS5.pdf|26|-5
+[nova]_patch_303895|Config options: Centralize neutron metadata options  Move config options of nova.conf section "neutron" to a new centralized location nova/conf/neutron.py (Append neutron metadata subsection.)  Remove some unused import  
+[nova]_patch_303895_PS1.pdf|22|-105
+[nova]_patch_303895_PS2.pdf|22|-105
+[nova]_patch_303895_PS3.pdf|22|-103
+[nova]_patch_305621_PS1.pdf|3|-3|Fix typo in nova release notes  Trivial fix  
+[openstack-ansible]_bug_1561875_patch_297563|Add project scoped token when obtaning token  Currently, when using script federated_login.sh, it will throw error about using a project scoped token. This patch aim to provide missing project scoped token when using in k2k system.  
+[openstack-ansible]_bug_1561875_patch_297563_PS1.pdf|1|-1
+[openstack-ansible]_bug_1561875_patch_297563_PS2.pdf|1|-1
+[openstack-ansible]_bug_1561875_patch_297563_PS3.pdf|1|-1
+[openstack-ansible]_bug_1561875_patch_297563_PS4.pdf|1|-1
+[openstack-ansible]_bug_1561875_patch_297563_PS5.pdf|1|-1
+[openstack-ansible]_bug_1561875_patch_297563_PS6.pdf|1|-1
+[nova]_patch_303203|Config options: centralize section "xvp"  The config options of the "nova.conf" section "xvp" now moved to the new central location "nova/conf/xvp.py".  
+[nova]_patch_303203_PS1.pdf|58|-28
+[nova]_patch_303203_PS2.pdf|57|-28
+[nova]_patch_303203_PS3.pdf|62|-28
+[api-site]_bug_1564315_patch_300265_PS1.pdf|4|-4|Remove duplicate word in sahara, glance, manila doc  Remove duplicate word 'the' and 'a' Trivial fix  
+[congress]_patch_299825_PS1.pdf|3|-3|Fix typo in congress  Trivial fix  
+[openstack-manuals]_bug_1564290_patch_299808_PS1.pdf|1|-1|Fix wrong package name S3 config doc  Change package name from 'swift-python-s3' to 'swift-plugin-s3'  
+[ironic]_patch_299812_PS1.pdf|1|-1|Fix typo in devstack script  Trivial fix  
+[openstack-manuals]_bug_1564287_patch_299804|Fix wrong description of IP subnet  Mistake 192.168.122/24 Trivial fix  
+[openstack-manuals]_bug_1564287_patch_299804_PS1.pdf|1|-1
+[openstack-manuals]_bug_1564287_patch_299804_PS2.pdf|2|-2
+[senlin]_patch_298606_PS1.pdf|8|-8|Fix minor typo in senlin project  Trivial fix  
+[api-site]_bug_1562703_patch_298113_PS1.pdf|4|-4|Fix wrong type in common compute params  In common.ent DTD of compute API, fix wrong type of DeallocateFloatingIpQueryParameters, ShowServerGroupQueryParameters, DeleteServerGroupQueryParameters from 'String' to 'xsd:string'.  In createFloaingIP of Compute API ref, 'pool' params is missing type of xsd:string  
+[openstack-ansible]_bug_1562056_patch_297957_PS1.pdf|1|-1|Fix typo duplicate in neutron release note  Remove duplicate word 'the' in neutron enable lbaas release note  
+[osops-tools-contrib]_patch_293291|Fix password configuration in liberty script  - Project nova, neutron, cinder config with wrong password var. - Fix in LB and OVS script version.  
+[osops-tools-contrib]_patch_293291_PS1.pdf|10|-10
+[osops-tools-contrib]_patch_293291_PS2.pdf|10|-10
+[osops-tools-contrib]_patch_293291_PS3.pdf|10|-10
