@@ -18,7 +18,7 @@ Drop proxy part if you do not use proxy
 
 
 #### III. How to use
-1. Run `./xdeliver.py -h` for usage
+- Run `./xdeliver.py -h` for usage
 
 ```bash
 hieulq@pwner:~/$ ./xdeliver.py -h
@@ -47,9 +47,9 @@ For example, if my username is `cap` and I want to query results of user `iron` 
 
    `$ ./xdelivery.py -o cap -u iron  --start-time=2016-04-01 -d 1`
 
-2. After that, you will have your `Deliver` folder containing all gerrit patch-set at PDF format. **Please restructure this folder and put another research documents.. into this folder.**
+- After that, you will have your `Deliver` folder containing all gerrit patch-set at PDF format. **Please restructure this folder and put another research documents.. into this folder.**
 
-3. Run `./gtree.py -h` for usage
+- Run `./gtree.py -h` for usage
 
 ```bash
 hieulq@pwner:~/$ ./gtree.py -h
@@ -66,7 +66,7 @@ For example, I want to generate the tree file with LOC and page count from folde
    
    `$ ./gtree -p Deliver`
 
-4. And the result is:
+- And the result is:
 
 ```bash
                                                                                   [Page count (for documents)]       [Line count (for source code)]
