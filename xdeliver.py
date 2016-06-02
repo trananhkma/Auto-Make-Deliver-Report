@@ -143,7 +143,7 @@ def main():
     parser.add_option("-d", "--del", dest="bdel", action='store',
                       type="int", help="whether to delete delivery folder "
                                        "and loc file [default: %default]",
-                      metavar="PORT", default=0)
+                      metavar="OPTION", default=0)
     (options, args) = parser.parse_args()
     check_date(options.start_time)
     owner = options.owner
