@@ -3,6 +3,7 @@
 # AUTHOR: hieulq
 
 from datetime import datetime, date, timedelta
+from collections import namedtuple
 
 import gerritssh as gssh
 import logging
@@ -28,6 +29,10 @@ GERRIT_HOST = 'review.openstack.org'
 GERRIT_PORT = 29418
 START_TIME = (date.today() - timedelta(days=7)).isoformat()
 OUTPUT = 'Deliver'
+
+BP_KEYWORDS = ['blueprint ', 'bp:']
+BUG_KEYWORDS = ['Closes-Bug: #', 'Closes-bug: #',
+                'Partial-Bug: #', 'Partial-bug: #']
 
 LOC_FILE = "/".join([os.getcwd(), 'loc.txt'])
 if os.path.exists(LOC_FILE):
@@ -86,36 +91,45 @@ def create_folder(project_name, topic, msg=None):
 
 
 def get_topic_name(ps):
+    topic = namedtuple('topic', ['bp', 'bug', 'change'])
     msg = ps.raw['commitMessage']
-    change = ps.number
-    if 'Closes-Bug: #' in msg:
-        return 'bug_%s_patch_%s' % (msg.split('Closes-Bug: #')[1].rstrip(),
-                                    change)
-    elif 'Closes-bug: #' in msg:
-        return 'bug_%s_patch_%s' % (msg.split('Closes-bug: #')[1].rstrip(),
-                                    change)
-    elif 'Partial-Bug: #' in msg:
-        return (
-            'bug_%s' % msg.split('Partial-Bug: #')[1].rstrip(),
-            'patch_%s' % change
-        )
-    elif 'Partial-bug: #' in msg:
-        return (
-            'bug_%s' % msg.split('Partial-bug: #')[1].rstrip(),
-            'patch_%s' % change
-        )
-    elif 'blueprint ' in msg:
-        return (
-            'bp_%s' % msg.split('blueprint ')[-1].splitlines()[0].rstrip(),
-            'patch_%s' % change
-        )
-    elif 'bp:' in msg:
-        return (
-            'bp_%s' % msg.split('bp:')[-1].splitlines()[0].rstrip(),
-            'patch_%s' % change
-        )
-    else:
-        return 'patch_%s' % change
+    topic.bp = ''
+    topic.bug = ''
+    topic.change = 'patch_%s' % ps.number
+
+    bp_count = 0
+    for bp in BP_KEYWORDS:
+        count = msg.count(bp)
+        for x in range(0, count):
+            topic.bp += 'BP_%s' % \
+                         msg.split(bp)[x + 1].splitlines()[0].rstrip()
+            if count > 1:
+                topic.bp += '_'
+        if count > 1:
+            topic.bp = topic.bp[:-1]
+        if count:
+            bp_count += 1
+            topic.bp += '_'
+    if bp_count:
+        topic.bp = topic.bp[:-1]
+
+    bug_count = 0
+    for bug in BUG_KEYWORDS:
+        count = msg.count(bug)
+        for x in range(0, count):
+            topic.bug += 'bug_%s' % \
+                         msg.split(bug)[x + 1].splitlines()[0].rstrip()
+            if count > 1:
+                topic.bug += '_'
+        if count > 1:
+            topic.bug = topic.bug[:-1]
+        if count:
+            bug_count += 1
+            topic.bug += '_'
+    if bug_count:
+        topic.bug = topic.bug[:-1]
+
+    return topic
 
 
 def main():
@@ -184,6 +198,10 @@ def main():
         topic = get_topic_name(p)
         pss = p.patchsets
         patch_urls = {}
+        if topic.bug:
+            name = topic.bug
+        else:
+            name = topic.change
         for num, ps in pss.iteritems():
             patch_urls[num] = PROTO + GERRIT_HOST + \
                 '/gitweb?p=' + p.repo_name + \
@@ -191,25 +209,24 @@ def main():
                 ps.raw['revision']
 
         LOG.info('|____ Project: %s', project_name)
-        LOG.info('|____ Topic: %s', topic)
+        LOG.info('|____ Topic: %s', name)
         LOG.info('|____ PS count: %s', len(patch_urls))
-        if isinstance(topic, tuple):
-            directory = create_folder(project_name, topic[0])
+        if topic.bp:
+            directory = create_folder(project_name, topic.bp)
             os.chdir("/".join([os.getcwd(), directory]))
-            topic = topic[1]
         if len(patch_urls) == 1:
-            create_file(project_name, topic,  patch_urls[1], (
+            create_file(project_name, name,  patch_urls[1], (
                         p.patchsets[1].raw['sizeInsertions'],
                         p.patchsets[1].raw['sizeDeletions'],
                         p.raw['commitMessage'].
                         split('Change-Id')[0].replace('\n', ' ')))
         else:
-            directory = create_folder(project_name, topic,
+            directory = create_folder(project_name, name,
                                       p.raw['commitMessage'].
-                                split('Change-Id')[0].replace('\n', ' '))
+                                      split('Change-Id')[0].replace('\n', ' '))
             os.chdir("/".join([os.getcwd(), directory]))
             for patch_num, patch_url in patch_urls.iteritems():
-                create_file(project_name, topic, patch_url, (
+                create_file(project_name, name, patch_url, (
                             p.patchsets[patch_num].raw['sizeInsertions'],
                             p.patchsets[patch_num].raw['sizeDeletions']),
                             patch_num=patch_num)
