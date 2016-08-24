@@ -37,6 +37,8 @@ Options:
                         MM-DD
   -k FILE, --keyfile=FILE
                         gerrit ssh keyfile [default: use local keyfile]
+  -P PASS, --passphrase=PASS
+                        passphrase in case of enrypting keyfile
   -u USER, --user=USER  gerrit user to querry [default: hieulq]
   -d OPTION, --del=OPTION
                         whether to delete delivery folder and loc file
