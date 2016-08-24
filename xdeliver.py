@@ -137,6 +137,9 @@ def main():
     parser.add_option("-k", "--keyfile", dest="keyfile", action='store',
                       help="gerrit ssh keyfile [default: use local keyfile]",
                       metavar="FILE", default=None)
+    parser.add_option("-P", "--passphrase", dest="passphrase", action='store',
+                      help="passphrase in case of enrypting keyfile",
+                      metavar="PASS", default=None)
     parser.add_option("-u", "--user", dest="user", action='store',
                       help="gerrit user to querry [default: %default]",
                       metavar="USER", default=OWNER)
@@ -151,10 +154,11 @@ def main():
     port = options.port
     server = options.server
     keyfile = options.keyfile
+    passp = options.passphrase
     user = options.user
     bdel = options.bdel
 
-    rsite = gssh.Site(server, owner, port, keyfile).connect()
+    rsite = gssh.Site(server, owner, port, keyfile, passp).connect()
     plist = gssh.Query('--commit-message',
                        'owner:' + user +
                        ' AND (status:merged OR status:pending)' +

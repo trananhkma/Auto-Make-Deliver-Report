@@ -1,0 +1,2 @@
+[python-openstackclient]_bug_1610883_patch_356932|Add filtering options to os subnet list command  This patch adds the following filtering options: '--project' and '--project-domain', '--network', '--gateway', '--name', '--subnet-range' to the command.  
+[python-openstackclient]_bug_1610883_patch_356932_PS1.pdf|189|-3

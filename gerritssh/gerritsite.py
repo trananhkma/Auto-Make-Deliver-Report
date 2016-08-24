@@ -103,7 +103,8 @@ class Site(object):
 
     '''
 
-    def __init__(self, sitename, username=None, port=None, keyfile=None):
+    def __init__(self, sitename, username=None, port=None, keyfile=None,
+                 passp=None):
         if not isinstance(sitename, str):
             raise TypeError('sitename must be a string')
 
@@ -112,7 +113,9 @@ class Site(object):
         self.__ssh_prefix = 'gerrit'
         self.__version = SV.Version('0.0.0')
         self.__keyfile = keyfile
-        self.__ssh = ssh.GerritSSHClient(sitename, username, port, keyfile)
+        self.__passp = passp
+        self.__ssh = ssh.GerritSSHClient(sitename, username, port, keyfile,
+                                         passp)
 
     def __repr__(self):
         ''' String representation of the instance '''

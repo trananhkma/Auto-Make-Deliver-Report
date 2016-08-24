@@ -74,15 +74,18 @@ class GerritSSHClient(SSHClient):
     :param username:     The optional user name to use on connection
     :param port:         The optional port to use
     :param keyfile_name: The optional key file to use
+    :param passp:        The optional passphrase to decrypt key
 
     """
 
-    def __init__(self, hostname, username=None, port=None, keyfile_name=None):
+    def __init__(self, hostname, username=None, port=None, keyfile_name=None,
+                 passp=None):
         """ Initialize and connect to SSH. """
         super(GerritSSHClient, self).__init__()
         self.hostname = hostname
         self.username = username
         self.key_filename = keyfile_name
+        self.passp = passp
         self.port = port
         self.__connected = Event()
         self.lock = Lock()
@@ -162,6 +165,7 @@ class GerritSSHClient(SSHClient):
             self.connect(hostname=self.hostname,
                          port=self.port,
                          username=self.username,
+                         password=self.passp,
                          key_filename=self.key_filename,
                          sock=paramiko.ProxyCommand(self.proxy_cmd))
         except socket.error as e:
