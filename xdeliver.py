@@ -35,9 +35,7 @@ BUG_KEYWORDS = ['Closes-Bug: #', 'Closes-bug: #',
                 'Partial-Bug: #', 'Partial-bug: #']
 
 LOC_FILE = "/".join([os.getcwd(), 'loc.txt'])
-if os.path.exists(LOC_FILE):
-    os.remove(LOC_FILE)
-LF = open(LOC_FILE, 'a')
+LF = None
 
 
 def check_date(value):
@@ -133,6 +131,7 @@ def get_topic_name(ps):
 
 
 def main():
+    global LF
     parser = optparse.OptionParser(usage="usage: %prog [options]",
                                    version="%prog 1.0")
     parser.add_option("-o", "--owner", dest="owner", action='store',
@@ -181,6 +180,10 @@ def main():
 
     if bdel == 1:
         shutil.rmtree(OUTPUT, True)
+        if os.path.exists(LOC_FILE):
+            os.remove(LOC_FILE)
+
+    LF = open(LOC_FILE, 'a')
 
     # Create delivery folder
     if not os.path.exists(OUTPUT):
