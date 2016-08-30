@@ -225,8 +225,11 @@ def main():
                                       p.raw['commitMessage'].
                                       split('Change-Id')[0].replace('\n', ' '))
             os.chdir("/".join([os.getcwd(), directory]))
+            tmp_name = name
+            if topic.bug and topic.change:
+                tmp_name = topic.bug + '_' + topic.change 
             for patch_num, patch_url in patch_urls.iteritems():
-                create_file(project_name, name, patch_url, (
+                create_file(project_name, tmp_name, patch_url, (
                             p.patchsets[patch_num].raw['sizeInsertions'],
                             p.patchsets[patch_num].raw['sizeDeletions']),
                             patch_num=patch_num)
