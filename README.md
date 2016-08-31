@@ -45,7 +45,7 @@ Options:
                         [default: 0]
 ```
 
-For example, if my username is `cap` and I want to query results of user `iron` from `2016-04-01`, before start querying it will delete the current output folder (default is `Delivery`). And note that default `xdelivery` will use my local private key (at `~/.ssh/id_rsa`), if you want to use another keyfile please use option `-k <key_path>`:
+For example, if my username is `cap` and I want to query results of user `iron` from `2016-04-01`, before start querying it will delete the current output folder (default is `Delivery`). And note that default `xdeliver` will use my local private key (at `~/.ssh/id_rsa`), if you want to use another keyfile please use option `-k <key_path>` with passphrase along with `-P <pass>`:
 
    `$ ./xdelivery.py -o cap -u iron  --start-time=2016-04-01 -d 1`
 
