@@ -47,7 +47,7 @@ Options:
 
 For example, if my username is `cap` and I want to query results of user `iron` from `2016-04-01`, before start querying it will delete the current output folder (default is `Delivery`). And note that default `xdeliver` will use my local private key (at `~/.ssh/id_rsa`), if you want to use another keyfile please use option `-k <key_path>` with passphrase along with `-P <pass>`:
 
-   `$ ./xdelivery.py -o cap -u iron  --start-time=2016-04-01 -d 1`
+   `$ ./xdeliver.py -o cap -u iron  --start-time=2016-04-01 -d 1`
 
 - After that, you will have your `Deliver` folder containing all gerrit patch-set at PDF format. **Please restructure this folder and put another research documents.. into this folder.**
 
