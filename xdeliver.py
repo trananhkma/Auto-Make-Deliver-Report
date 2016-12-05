@@ -52,7 +52,10 @@ def get_content(patch_url):
 
 
 def create_file(project_name, bug_name, patch_url, pinfo=None, patch_num=1):
-    filename = '%s_%s_PS%s.txt' % (project_name, bug_name, patch_num)
+    if project_name:
+        filename = '%s_%s_PS%s.txt' % (project_name, bug_name, patch_num)
+    else:
+        filename = '%s_PS%s.txt' % (bug_name, patch_num)
     LOG.info('|_______ Getting patch: %s', patch_num)
     while True:
         try:
@@ -74,17 +77,19 @@ def create_file(project_name, bug_name, patch_url, pinfo=None, patch_num=1):
 
 
 def create_folder(project_name, topic, msg=None):
-    folder_name = '%s_%s' % (project_name, topic)
-    directory = "%s/Patches" % folder_name
+    if project_name:
+        directory = '%s_%s' % (project_name, topic)
+    else:
+        directory = '%s' % topic
     if not os.path.exists(directory):
-        LOG.info('|_______ Create folder: %s', folder_name)
+        LOG.info('|_______ Create folder: %s', directory)
         os.makedirs(directory)
         if msg is not None:
-            LF.write(folder_name + '|' + msg + '\n')
+            LF.write(directory + '|' + msg + '\n')
     else:
-        LOG.info('|_______ Folder %s existed!', folder_name)
+        LOG.info('|_______ Folder %s existed!', directory)
         if msg is not None:
-            LF.write((folder_name + '|' + msg + '\n').encode('utf-8'))
+            LF.write((directory + '|' + msg + '\n').encode('utf-8'))
     return directory
 
 
@@ -214,17 +219,19 @@ def main():
         LOG.info('|____ Project: %s', project_name)
         LOG.info('|____ Topic: %s', name)
         LOG.info('|____ PS count: %s', len(patch_urls))
+        patch_name = project_name
         if topic.bp:
-            directory = create_folder(project_name, topic.bp)
+            directory = create_folder(patch_name, topic.bp)
             os.chdir("/".join([os.getcwd(), directory]))
+            patch_name = None
         if len(patch_urls) == 1:
-            create_file(project_name, name,  patch_urls[1], (
+            create_file(patch_name, name,  patch_urls[1], (
                         p.patchsets[1].raw['sizeInsertions'],
                         p.patchsets[1].raw['sizeDeletions'],
                         p.raw['commitMessage'].
                         split('Change-Id')[0].replace('\n', ' ')))
         else:
-            directory = create_folder(project_name, name,
+            directory = create_folder(patch_name, name,
                                       p.raw['commitMessage'].
                                       split('Change-Id')[0].replace('\n', ' '))
             os.chdir("/".join([os.getcwd(), directory]))
@@ -232,7 +239,7 @@ def main():
             if topic.bug and topic.change:
                 tmp_name = topic.bug + '_' + topic.change 
             for patch_num, patch_url in patch_urls.iteritems():
-                create_file(project_name, tmp_name, patch_url, (
+                create_file(None, tmp_name, patch_url, (
                             p.patchsets[patch_num].raw['sizeInsertions'],
                             p.patchsets[patch_num].raw['sizeDeletions']),
                             patch_num=patch_num)
