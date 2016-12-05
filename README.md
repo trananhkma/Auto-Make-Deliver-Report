@@ -64,11 +64,11 @@ Options:
 
 ```
 
-For example, I want to generate the tree file with LOC and page count from folder generate from `xdeliver`:
+For example, I want to generate the tree file 'list_of_file_Container_20161205.txt' with LOC and page count from folder generate from `xdeliver`:
    
-   `$ ./gtree.py -p Deliver`
+   `$ ./gtree.py -p Deliver >list_of_file_Container_20161205.txt`
 
-- And the result is:
+- And the result is the file 'list_of_file_Container_20161205.txt' is created with the following content:
 
 ```bash
                                                                                   [Page count (for documents)]       [Line count (for source code)]
