@@ -1,3 +1,6 @@
 *.pyc
 Deliver/
 input.txt
+.idea/
+loc.txt
+*.txt

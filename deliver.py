@@ -119,9 +119,9 @@ def main():
     if not os.path.exists(OUTPUT):
         os.makedirs(OUTPUT)
     if OUTPUT.startswith('/'):
-    	root_dir = OUTPUT
+        root_dir = OUTPUT
     else:
-    	root_dir = "/".join([os.getcwd(), OUTPUT])
+        root_dir = "/".join([os.getcwd(), OUTPUT])
     inputs = get_input()
     for url in inputs:
         print 'Getting from', url
