@@ -66,7 +66,7 @@ Options:
 
 For example, I want to generate the tree file with LOC and page count from folder generate from `xdeliver`:
    
-   `$ ./gtree -p Deliver`
+   `$ ./gtree.py -p Deliver`
 
 - And the result is:
 
