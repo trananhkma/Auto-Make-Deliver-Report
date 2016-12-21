@@ -64,8 +64,11 @@ def tree(dir, padding, print_files=False, isLast=False, isFirst=False,
             print padding.decode('utf8')[:-1].encode('utf8') + '+---' + \
                   basename(abspath(dir))
         if dir.split('/')[-1] in locs:
-            print padding + recur_deli(9, 1) + '- ' + \
-                  locs[dir.split('/')[-1]][0]
+            # Pull commit message
+            s = locs[dir.split('/')[-1]][0]
+            # Get title of commit message only
+            ss = s.split("  ")[0]
+            print padding + recur_deli(9, 1) + '- ' + ss
     if print_files:
         files = listdir(dir)
     else:
@@ -98,8 +101,12 @@ def tree(dir, padding, print_files=False, isLast=False, isFirst=False,
                           ' insertions(+), ' + locs[file][1].replace('-','') +\
                           ' deletions(-)'
                     if len(locs[file]) == 3:
+                        # Pull commit message
+                        s = locs[file][2]
+                        # Get title of commit message only
+                        ss = s.split("  ")[0]
                         print padding + recur_deli(10, 1) + '- ' + \
-                              locs[file][2]
+                              ss
                     print padding
                 else:
                     print padding + '\---' + file + ' ' + \
@@ -115,8 +122,12 @@ def tree(dir, padding, print_files=False, isLast=False, isFirst=False,
                           ' insertions(+), ' + locs[file][1].replace('-','') +\
                           ' deletions(-)'
                     if len(locs[file]) == 3:
+                        # Pull commit message
+                        s = locs[file][2]
+                        # Get title of commit message only
+                        ss = s.split("  ")[0]
                         print padding + '|' + recur_deli(9, 1) + \
-                              '- ' + locs[file][2]
+                              '- ' + ss
                         print padding + '|'
                 else:
                     print padding + '|---' + file + ' ' + \
