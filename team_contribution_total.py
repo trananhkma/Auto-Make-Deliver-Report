@@ -36,7 +36,9 @@ def main():
             user_bp_review = parsed['drafted_blueprint_count']
             user_rv_count = parsed['marks']['-1'] + parsed['marks']['1'] + \
                 parsed['marks']['-2'] + parsed['marks']['2']
-
+            
+            print("* %s's review: %d" % (user, user_rv_count))
+            
             total_ps += user_ps_count
             total_cm += user_cm_count
             total_rv += user_rv_count
