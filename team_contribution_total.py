@@ -19,8 +19,6 @@ COMPANY = "fujitsu"
 PAYLOAD = {'release': RELEASE, 'project_type': PROJECT_TYPE,
            'company': COMPANY}
 
-TODAY = int(time.time())
-
 
 def get_statistics(is_member=False):
     total_ps, total_cm, total_rv, total_mbp, total_rbp = 0, 0, 0, 0, 0
@@ -79,5 +77,4 @@ def main():
 
 
 if __name__ == '__main__':
-    if __name__ == '__main__':
-        main()
+    main()
