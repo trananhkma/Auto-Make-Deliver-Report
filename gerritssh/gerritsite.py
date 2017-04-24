@@ -74,6 +74,13 @@ class InvalidCommandError(GerritsshException):
     pass
 
 
+class InvalidUserError(GerritsshException):
+    '''
+    Raised when an username is not found.
+    '''
+    pass
+
+
 class Site(object):
     '''
     An individual Gerrit site.
@@ -186,6 +193,8 @@ class Site(object):
         retval = [(l if isinstance(l, str) else l.encode('utf8', 'replace'))
                   for l in retval]
         _logger.debug('Returning:{0}'.format(retval))
+        if '"type":"error"' in retval[0]:
+            raise InvalidUserError()
         return s.encode('utf-8', 'replace'), retval
 
     def connect(self):
