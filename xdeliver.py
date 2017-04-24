@@ -205,7 +205,7 @@ def main():
 
         # check invalid username
         except gssh.gerritsite.InvalidUserError:
-            print('INVALID USERNAME: ' + user)
+            LOG.error('INVALID USERNAME: ' + user)
             break
 
         LOG.info("| Total gerrit results: %d", len(plist))
