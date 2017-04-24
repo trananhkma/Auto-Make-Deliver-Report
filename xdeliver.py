@@ -105,7 +105,7 @@ def get_topic_name(ps):
         count = msg.count(bp)
         for x in range(0, count):
             topic.bp += 'BP_%s' % \
-                         msg.split(bp)[x + 1].splitlines()[0].rstrip()
+                        msg.split(bp)[x + 1].splitlines()[0].rstrip()
             if count > 1:
                 topic.bp += '_'
         if count > 1:
@@ -173,15 +173,9 @@ def main():
     server = options.server
     keyfile = options.keyfile
     passp = options.passphrase
-    user = options.user
-    bdel = options.bdel
 
-    rsite = gssh.Site(server, owner, port, keyfile, passp).connect()
-    plist = gssh.Query('--commit-message',
-                       'owner:' + user +
-                       ' AND (status:merged OR status:pending)' +
-                       ' since:' + start_time).execute_on(rsite)
-    LOG.info("| Total gerrit results: %d", len(plist))
+    # remove existing folder
+    bdel = options.bdel
 
     if bdel == 1:
         shutil.rmtree(OUTPUT, True)
@@ -198,51 +192,70 @@ def main():
     else:
         root_dir = "/".join([os.getcwd(), OUTPUT])
 
-    for p in plist:
-        LOG.info("|_ Generating doc from gerrit patch: %s ", p.number)
-        os.chdir(root_dir)
+    rsite = gssh.Site(server, owner, port, keyfile, passp).connect()
 
-        project_name = '[' + p.repo_name.split('/')[-1] + ']'
-        topic = get_topic_name(p)
-        pss = p.patchsets
-        patch_urls = {}
-        if topic.bug:
-            name = topic.bug
-        else:
-            name = topic.change
-        for num, ps in pss.iteritems():
-            patch_urls[num] = PROTO + GERRIT_HOST + \
-                '/gitweb?p=' + p.repo_name + \
-                '.git;a=patch;h=' + \
-                ps.raw['revision']
+    # get user from user list
+    user_list = options.user.split(",")
+    for user in user_list:
+        try:
+            plist = gssh.Query('--commit-message',
+                               'owner:' + user +
+                               ' AND (status:merged OR status:pending)' +
+                               ' since:' + start_time).execute_on(rsite)
 
-        LOG.info('|____ Project: %s', project_name)
-        LOG.info('|____ Topic: %s', name)
-        LOG.info('|____ PS count: %s', len(patch_urls))
-        patch_name = project_name
-        if topic.bp:
-            directory = create_folder(patch_name, topic.bp)
-            os.chdir("/".join([os.getcwd(), directory]))
-            patch_name = None
-        if len(patch_urls) == 1:
-            create_file(patch_name, name,  patch_urls[1], (
-                        p.patchsets[1].raw['sizeInsertions'],
-                        p.patchsets[1].raw['sizeDeletions'],
-                        p.raw['commitMessage'].
+        # check invalid username
+        except gssh.gerritsite.InvalidUserError:
+            print('INVALID USERNAME: ' + user)
+            break
+
+        LOG.info("| Total gerrit results: %d", len(plist))
+
+        for p in plist:
+            LOG.info("|_ Generating doc from gerrit patch: %s ", p.number)
+            os.chdir(root_dir)
+
+            project_name = '[' + p.repo_name.split('/')[-1] + ']'
+            topic = get_topic_name(p)
+            pss = p.patchsets
+            patch_urls = {}
+            if topic.bug:
+                name = topic.bug
+            else:
+                name = topic.change
+            for num, ps in pss.iteritems():
+                patch_urls[num] = PROTO + GERRIT_HOST + \
+                                  '/gitweb?p=' + p.repo_name + \
+                                  '.git;a=patch;h=' + \
+                                  ps.raw['revision']
+
+            LOG.info('|____ Project: %s', project_name)
+            LOG.info('|____ Topic: %s', name)
+            LOG.info('|____ PS count: %s', len(patch_urls))
+            patch_name = project_name
+            if topic.bp:
+                directory = create_folder(patch_name, topic.bp)
+                os.chdir("/".join([os.getcwd(), directory]))
+                patch_name = None
+            if len(patch_urls) == 1:
+                create_file(patch_name, name, patch_urls[1], (
+                    p.patchsets[1].raw['sizeInsertions'],
+                    p.patchsets[1].raw['sizeDeletions'],
+                    p.raw['commitMessage'].
                         split('Change-Id')[0].replace('\n', ' ')))
-        else:
-            directory = create_folder(patch_name, name,
-                                      p.raw['commitMessage'].
-                                      split('Change-Id')[0].replace('\n', ' '))
-            os.chdir("/".join([os.getcwd(), directory]))
-            tmp_name = name
-            if topic.bug and topic.change:
-                tmp_name = topic.bug + '_' + topic.change 
-            for patch_num, patch_url in patch_urls.iteritems():
-                create_file(None, tmp_name, patch_url, (
-                            p.patchsets[patch_num].raw['sizeInsertions'],
-                            p.patchsets[patch_num].raw['sizeDeletions']),
-                            patch_num=patch_num)
+            else:
+                directory = create_folder(patch_name, name,
+                                          p.raw['commitMessage'].
+                                          split('Change-Id')[0].replace('\n',
+                                                                        ' '))
+                os.chdir("/".join([os.getcwd(), directory]))
+                tmp_name = name
+                if topic.bug and topic.change:
+                    tmp_name = topic.bug + '_' + topic.change
+                for patch_num, patch_url in patch_urls.iteritems():
+                    create_file(None, tmp_name, patch_url, (
+                        p.patchsets[patch_num].raw['sizeInsertions'],
+                        p.patchsets[patch_num].raw['sizeDeletions']),
+                                patch_num=patch_num)
     LF.close()
     LOG.info("|_ FIN!")
 
