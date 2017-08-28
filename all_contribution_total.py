@@ -7,7 +7,7 @@ import time
 import requests
 
 # Change this list based on your member's info
-USER_LIST = ['hieulq', 'duonghq', 'tovin07', 'daidv']
+USER_LIST = ['hieulq', 'duonghq', 'namnh', 'daidv', 'trungnv', 'kiennt26', 'tovin07']
 
 # No need to change in case of changing Stackalytics API or changing cycle
 CONTRIB_URL = "http://stackalytics.com/api/1.0/contribution"
