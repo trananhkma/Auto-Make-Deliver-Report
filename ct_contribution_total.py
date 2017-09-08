@@ -11,7 +11,7 @@ USER_LIST = ['hieulq', 'tovin07']
 
 # No need to change in case of changing Stackalytics API or changing cycle
 CONTRIB_URL = "http://stackalytics.com/api/1.0/contribution"
-RELEASE = "pike"
+RELEASE = "queen"
 
 # Common query info
 PROJECT_TYPE = "openstack"
