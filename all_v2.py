@@ -20,8 +20,23 @@ day = today.day
 a = date(year, month, day).isocalendar()[1]
 a1 = date(2017, 12, 31).isocalendar()[1]
 b = date(2018, 3, 2).isocalendar()[1]
-week = (a1 - a) + b
-filename = 'FVL_UC__Contribution_Summarization_R-' + str(week) + '.xlsx'
+if a > b:
+    week = (a1 - a) + b
+else:
+    week = b - a
+# Cal start date and end date of a week
+def _range_date_of_week(year, week):
+    d = date(year,1,1)
+    if(d.weekday()>3):
+        d = d+timedelta(7-d.weekday())
+    else:
+        d = d - timedelta(d.weekday())
+    dlt = timedelta(days = (week-1)*7)
+    start = str(d + dlt)
+    end = str(d + dlt + timedelta(days=4))
+    return start, end
+
+filename = 'FVL_UC_Contribution_Summarization_R-' + str(week) + '.xlsx'
 workbook = xlsxwriter.Workbook(filename)
 worksheet = workbook.add_worksheet()
 def output_xlsx (member, reviews, commits, index, sum=None):
@@ -53,7 +68,9 @@ def output_xlsx (member, reviews, commits, index, sum=None):
     row = 13 + index*4
     # Write some simple text.
     if sum:
-        worksheet.merge_range('D' + str(row - 5) + ':J'  + str(row - 5), 'Week (' + str(today) + ')', merge_format)
+        worksheet.merge_range('D' + str(row - 5) + ':J'  + str(row - 5),
+                              'Week (From ' + _range_date_of_week(year, a)[0] +
+                              ' to ' + _range_date_of_week(year, a)[1] + ' )', merge_format)
         worksheet.merge_range('D' + str(row - 4) + ':D'  + str(row - 2), 'Team', merge_format)
         worksheet.write('E' + str(row - 4), 'R-' + str(week), bold)
         worksheet.write('E' + str(row - 3), 'Reviews (Until 2018/02/23)', bold)
@@ -71,12 +88,12 @@ def output_xlsx (member, reviews, commits, index, sum=None):
         n1 = commit_target - (commit_target/21)*(26-week) #21 is the week of RC1
         m2 = review_target - reviews
         n2 = commit_target - commits
-        worksheet.write('H' + str(row - 3), m1, bold)
-        worksheet.write('H' + str(row - 2), n1, bold)
+        worksheet.write('H' + str(row - 3), round(m1), bold)
+        worksheet.write('H' + str(row - 2), round(n1), bold)
         worksheet.write('I' + str(row - 3), m2, bold)
         worksheet.write('I' + str(row - 2), n2, bold)
-        worksheet.write('J' + str(row - 3), m1 - m2, bold_color)
-        worksheet.write('J' + str(row - 2), n1 - n1, bold_color)
+        worksheet.write('J' + str(row - 3), round(m1 - m2), bold_color)
+        worksheet.write('J' + str(row - 2), round(n1 - n2), bold_color)
     else:
         worksheet.merge_range('D' + str(row) + ':D'  + str(row + 2), member, merge_format)
         worksheet.write('E' + str(row ), '', bold)
@@ -87,8 +104,8 @@ def output_xlsx (member, reviews, commits, index, sum=None):
         worksheet.write('H' + str(row), 'Target remain', bold)
         worksheet.write('I' + str(row), 'Actual remain', bold)
         worksheet.write('J' + str(row), 'Status', bold)
-        q = review_target / 5
-        p = commit_target / 5
+        q = review_target / len(members)
+        p = commit_target / len(members)
         q1 = q - (q/25)*(26 - week)
         p1 = p - (p/21)*(26 - week)
         q2 = q - reviews
@@ -97,12 +114,12 @@ def output_xlsx (member, reviews, commits, index, sum=None):
         worksheet.write('F' + str(row + 2), p, bold)
         worksheet.write('G' + str(row + 1), reviews, bold_color)
         worksheet.write('G' + str(row + 2), commits, bold_color)
-        worksheet.write('H' + str(row + 1), q1, bold)
-        worksheet.write('H' + str(row + 2), p1, bold)
+        worksheet.write('H' + str(row + 1), round(q1), bold)
+        worksheet.write('H' + str(row + 2), round(p1), bold)
         worksheet.write('I' + str(row + 1), q2, bold)
         worksheet.write('I' + str(row + 2), p2, bold)
-        worksheet.write('J' + str(row + 1), q1-q2, bold_color)
-        worksheet.write('J' + str(row + 2), p1-p2, bold_color)
+        worksheet.write('J' + str(row + 1), round(q1-q2), bold_color)
+        worksheet.write('J' + str(row + 2), round(p1-p2), bold_color)
 # Create an new Excel file and add a worksheet...End
 
 patches = prettytable.PrettyTable(["UC team results on the community summary", str(today) + " (R-" + str(week) + ")"])
