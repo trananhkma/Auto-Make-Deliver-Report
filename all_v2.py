@@ -7,8 +7,8 @@ import urllib, json
 today = datetime.date.today()
 
 #Input member launchpad id here.
-members = ["hieulq", "duonghq", "tovin07", "kiennt26", "daidv", "namnh"]
-maps = {"hieulq": "Hieu", "duonghq": "Duong", "tovin07": "Vinh", "kiennt26": "Kien", "daidv": "Dai", "namnh": "Nam"}
+members = ["hieulq", "duonghq", "tovin07", "kiennt2609", "daidv", "namnh"]
+maps = {"hieulq": "Hieu", "duonghq": "Duong", "tovin07": "Vinh", "kiennt2609": "Kien", "daidv": "Dai", "namnh": "Nam"}
 #Input target
 review_target = 1219
 commit_target = 213
