@@ -26,6 +26,7 @@ logging.basicConfig(level=logging.DEBUG,
 PROTO = 'https://'
 OWNER = 'hieulq'
 GERRIT_HOST = 'review.openstack.org'
+GIT_HOST = 'git.openstack.org'
 GERRIT_PORT = 29418
 START_TIME = (date.today() - timedelta(days=7)).isoformat()
 OUTPUT = 'Deliver'
@@ -223,10 +224,13 @@ def main():
             else:
                 name = topic.change
             for num, ps in pss.iteritems():
-                patch_urls[num] = PROTO + GERRIT_HOST + \
-                                  '/gitweb?p=' + p.repo_name + \
-                                  '.git;a=patch;h=' + \
-                                  ps.raw['revision']
+                # patch_urls[num] = PROTO + GERRIT_HOST + \
+                #                   '/gitweb?p=' + p.repo_name + \
+                #                   '.git;a=patch;h=' + \
+                #                   ps.raw['revision']
+                patch_urls[num] = PROTO + GIT_HOST + \
+                                  '/cgit/' + p.repo_name + \
+                                  '/patch/?id=' + ps.raw['revision']
 
             LOG.info('|____ Project: %s', project_name)
             LOG.info('|____ Topic: %s', name)
