@@ -63,7 +63,7 @@ def tree(dir, padding, print_files=False, isLast=False, isFirst=False,
         else:
             print padding.decode('utf8')[:-1].encode('utf8') + '+---' + \
                   basename(abspath(dir))
-        if dir.split('/')[-1] in locs:
+        if locs and dir.split('/')[-1] in locs:
             # Pull commit message
             s = locs[dir.split('/')[-1]][0]
             # Get title of commit message only
@@ -93,7 +93,7 @@ def tree(dir, padding, print_files=False, isLast=False, isFirst=False,
         else:
             if isLast:
                 l = len(padding) + len(file) + 5
-                if file in locs:
+                if locs and file in locs:
                     TOTAL_LOC_INSERTION += int(locs[file][0])
                     TOTAL_LOC_DELETIONS += int(locs[file][1])
                     print padding + '\---' + file + ' ' + \
@@ -114,7 +114,7 @@ def tree(dir, padding, print_files=False, isLast=False, isFirst=False,
                     print padding
             else:
                 l = len(padding) + len(file) + 5
-                if file in locs:
+                if locs and file in locs:
                     TOTAL_LOC_INSERTION += int(locs[file][0])
                     TOTAL_LOC_DELETIONS += int(locs[file][1])
                     print padding + '|---' + file + ' ' + \
@@ -144,31 +144,43 @@ def main():
     parser.add_option("-p", "--path", dest="path", action='store',
                       help="delivery folder path [default: %default]",
                       metavar="PATH", default='~/Deliver')
+    parser.add_option("-l", "--line-of-code-count", action='store',
+                      type=int, metavar="OPTION", default=0, dest='loc',
+                      help="whether to report patch in line of code or not")
 
     (options, args) = parser.parse_args()
     path = options.path
+    loc = options.loc
 
     locr = get_loc()
     locs = {}
     if isdir(path):
-        print "                                                         " \
-              "                         [Page count (for documents)]    " \
-              "   [Line count (for source code)]"
-        print "\nFolder PATH listing"
-        for line in locr:
-            loc = line.split('|')
-            if len(loc) == 2:
-                locs[loc[0]] = (loc[1],)
-            elif len(loc) == 4:
-                locs[loc[0]] = (loc[1], loc[2], loc[3])
-            else:
-                locs[loc[0]] = (loc[1], loc[2])
-        tree(path, '', True, False, True, locs)
-        print PC_STR + recur_deli(PAGE_DECO - len(PC_STR) + 1) + \
-              str(TOTAL_PAGE_COUNT) + ' pages'
-        print LOC_STR + recur_deli(LOC_DECO - len(LOC_STR) + 1) + \
-              str(TOTAL_LOC_INSERTION) + ' insertion(+), ' + \
-              str(abs(TOTAL_LOC_DELETIONS)) + ' deletions(-)'
+        if loc == 1:
+            print "                                                         " \
+                "                         [Page count (for documents)]    " \
+                "   [Line count (for source code)]"
+            print "\nFolder PATH listing"
+            for line in locr:
+                loc = line.split('|')
+                if len(loc) == 2:
+                    locs[loc[0]] = (loc[1],)
+                elif len(loc) == 4:
+                    locs[loc[0]] = (loc[1], loc[2], loc[3])
+                else:
+                    locs[loc[0]] = (loc[1], loc[2])
+            tree(path, '', True, False, True, locs)
+            print PC_STR + recur_deli(PAGE_DECO - len(PC_STR) + 1) + \
+                str(TOTAL_PAGE_COUNT) + ' pages'
+            print LOC_STR + recur_deli(LOC_DECO - len(LOC_STR) + 1) + \
+                str(TOTAL_LOC_INSERTION) + ' insertion(+), ' + \
+                str(abs(TOTAL_LOC_DELETIONS)) + ' deletions(-)'
+        elif loc == 0:
+            print "                                                         " \
+                "                         [Page count]    "
+            print "\nFolder PATH listing"
+            tree(path, '', True, False, True, None)
+            print PC_STR + recur_deli(PAGE_DECO - len(PC_STR) + 1) + \
+                str(TOTAL_PAGE_COUNT) + ' pages'
     else:
         print 'ERROR: \'' + path + '\' is not a directory'
 

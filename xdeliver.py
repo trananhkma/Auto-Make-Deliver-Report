@@ -23,7 +23,7 @@ logging.basicConfig(level=logging.DEBUG,
 
 # DEFAULT SETTINGS
 
-PROTO = 'https://'
+PROTO = 'http://'
 OWNER = 'hieulq'
 GERRIT_HOST = 'review.openstack.org'
 GIT_HOST = 'git.openstack.org'
@@ -64,7 +64,9 @@ def create_file(project_name, bug_name, patch_url, pinfo=None, patch_num=1):
                 f.write(get_content(patch_url))
         except TypeError:
             LOG.error('Failed to get PS raw data! Retrying..')
-            continue
+            with open(filename, 'w+') as f:
+                f.write('Repository moved!')
+            break
         break
     outfile = txt2pdf.convert(filename)
     os.remove(filename)
