@@ -96,6 +96,9 @@ def tree(dir, padding, print_files=False, isLast=False, isFirst=False,
                 if locs and file in locs:
                     TOTAL_LOC_INSERTION += int(locs[file][0])
                     TOTAL_LOC_DELETIONS += int(locs[file][1])
+
+                    get_page_num(path)
+
                     print padding + '\---' + file + ' ' + \
                           recur_deli(LOC_DECO-l+1) + locs[file][0] + \
                           ' insertions(+), ' + locs[file][1].replace('-','') +\
@@ -117,6 +120,9 @@ def tree(dir, padding, print_files=False, isLast=False, isFirst=False,
                 if locs and file in locs:
                     TOTAL_LOC_INSERTION += int(locs[file][0])
                     TOTAL_LOC_DELETIONS += int(locs[file][1])
+
+                    get_page_num(path)
+
                     print padding + '|---' + file + ' ' + \
                           recur_deli(LOC_DECO-l+1) + locs[file][0] + \
                           ' insertions(+), ' + locs[file][1].replace('-','') +\
@@ -135,6 +141,7 @@ def tree(dir, padding, print_files=False, isLast=False, isFirst=False,
 
 
 def main():
+    global TOTAL_PAGE_COUNT
     global TOTAL_LOC_INSERTION
     global TOTAL_LOC_DELETIONS
 
